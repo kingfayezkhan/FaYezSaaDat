@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scroll Animation and Mobile Menu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: cadetblue;
+            color: #1d1d1f;
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+        #contactSection {
+            padding: 60px 20px;
+            background-color: cadetblue;
+            max-height: 500px; /* Adjust based on your design */
+            overflow-y: auto; /* Enable vertical scrolling */
+            display: none; /* Hide by default */
+        }
+
+        /* Header styling */
+        .header {
+            height: 80px;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+            border-bottom: 1px solid #e0e0e0;
+            z-index: 1000;
+        }
+
+        .logo img {
+            height: 50px;
+        }
+
+        .company-name {
+            font-size: 20px;
+            color: red;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+          /* Footer */
+          .footer {
+            
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .footer a {
+            color: white;
+            margin: 0 15px;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        .footer a:hover {
+            color: #004080;
+        }
+
+        /* Mobile menu */
+        .mobile-menu {
+            display: none;
+            font-size: 30px;
+            cursor: pointer;
+        }
+
+        .mobile-submenu {
+            max-height: 0; /* Initially hide the menu */
+            overflow: hidden;
+            background-color: #ffffff;
+            position: absolute;
+            width: 100%;
+            top: 80px;
+            left: 0;
+            z-index: 900;
+            opacity: 0;
+            transition: max-height 0.5s ease, opacity 0.5s ease;
+        }
+
+        .mobile-submenu.show {
+            max-height: 500px; /* Adjust as needed */
+            opacity: 1;
+        }
+
+        .mobile-submenu.hide {
+            max-height: 0;
+            opacity: 0;
+        }
+
+        .mobile-submenu a {
+            display: block;
+            padding: 15px;
+            text-align: center;
+            color: #1d1d1f;
+            text-decoration: none;
+            background-color: cadetblue;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .mobile-submenu a:hover {
+            background-color: rgb(75, 146, 149);
+            color: deepskyblue;
+        }
+
+        .logistics-submenu {
+            max-height: 0; /* Initially hide the submenu */
+            overflow: hidden;
+            transition: max-height 0.3s ease, opacity 0.3s ease;
+            opacity: 0;
+        }
+
+        .logistics-submenu.show {
+            max-height: 200px; /* Adjust as needed */
+            opacity: 1;
+        }
+
+        .logistics-submenu.hide {
+            max-height: 0;
+            opacity: 0;
+        }
+
+        /* Fade-in animation styles */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Mobile Media Query */
+        @media (max-width: 768px) {
+            .mobile-menu {
+                display: block;
+            }
+        }
+
+        /* Main content */
+        .content {
+            padding: 20px;
+            margin: 100px auto;
+            max-width: 800px;
+        }
+
+        .section {
+            margin: 100px 0;
+            padding: 40px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .section h2 {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .section p {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #555;
+        }
+        .header .nav {
+            font-size: 13px;
+           
+            display: flex;
+            align-items: center;
+        }
+        .header .nav ul {
+            list-style: none;
+            display: flex;
+            align-items: center;
+        }
+        .header .nav ul li {
+            position: relative;
+           
+            margin-left: 20px;
+        }
+        .header .nav ul li a {
+            text-decoration: none;
+            color: black;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+        .header .nav ul li a:hover {
+            color: deepskyblue;
+            border-radius: 5px;
+        }
+        .icon{
+            display: flex;
+            align-items: center;
+        }
+        .icon:hover{
+            color: deepskyblue;
+        }
+        @media (max-width: 768px) {
+            .header .nav {
+                display: none; /* Hide regular nav on small screens */
+            }
+
+            .mobile-menu-toggle {
+                display: block; /* Show mobile menu toggle */
+            }
+
+            .mobile-menu.active {
+                display: flex; /* Show active mobile menu */
+            }
+        }
+
+        @media (min-width: 769px) {
+            .mobile-menu {
+                display: none; /* Hide mobile menu on larger screens */
+            }
+
+            .header .nav {
+                display: flex; /* Show regular nav on larger screens */
+            }
+        }
+        .dna{
+                width: 300px;
+                height: 70px;
+                perspective: 400px;
+                transform-style: preserve-3d;
+            }
+            .ele{
+                position: relative;
+                width: 10x;
+                height: 70px;
+                border-left: 1px #B0B0B0 dashed;
+                float: left;
+                margin: 0 8px;
+                transform: rotateX(-360deg);
+                animation: run 2s linear infinite;
+                animation-delay: calc(0.15s * var(--i));
+            }
+            .ele:before,
+            .ele:after{
+                content: "";
+                position: absolute;
+                width: 10px;
+                height: 10px;
+                background: deepskyblue;
+                border-radius: 50%;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            .ele:before{
+                top: -2px;
+                background: #000;
+            }
+            .ele:after{
+                bottom: -2px;
+            }
+            @keyframes run{
+                to{
+                    transform: none;
+                }
+            }
+            .loader{
+                height: 125px;
+                width: 125px;
+                animation: spin 7s ease-in-out infinite;
+            }
+            .circle{
+                position: absolute;
+                width: 125px;
+                height: 125px;
+                mix-blend-mode: screen;
+                border-radius: 50%;
+                opacity: 0.75;
+                animation: breath 7s ease-in-out infinite;
+                top: 500px;
+                left: 600px;
+            }
+            .circle:nth-child(1){
+                transform: translate(-35px, -50px);
+                background: #1abc9c;
+            }
+            .circle:nth-child(2){
+                transform: translate(35px, -50px);
+                background: #2ecc71;
+            }
+            .circle:nth-child(3){
+                transform: translate(-60px, 0px);
+                background: #3498db;
+            }
+            .circle:nth-child(4){
+                transform: translate(60px, 0);
+                background: #9b59b6;
+            }
+            .circle:nth-child(5){
+                transform: translate(-35px, 50px);
+                background: #f1c40f;
+            }
+            .circle:nth-child(6){
+                transform: translate(35px, 50px);
+                background: #e67e22;
+            }
+            @keyframes spin{
+                50%{
+                    filter: blur(0px);
+                }
+                100%{
+                    transform: rotate(360deg);
+                }
+            }
+            @keyframes breath{
+                50%{
+                    transform: translateY(0px);
+                }
+            }
+            .box{
+                padding-top: 50px;
+                display: flex;
+            }
+            .inner{
+                width: 490px;
+                height: 200px;
+                line-height: 200px;
+                font-size: 4em;
+                font-family: sans-serif;
+                font-weight: bold;
+                white-space: nowrap;
+                overflow: hidden;
+            }
+            .inner:first-child{
+                background-color: indianred;
+                color: darkred;
+                transform-origin: right;
+                transform: perspective(100px)
+                rotateY(-15deg);
+            }
+            .inner:last-child{
+                background-color: lightcoral;
+                color: antiquewhite;
+                transform-origin: left;
+                transform: perspective(100px)
+                rotateY(15deg);
+            }
+            span{
+                position: absolute;
+                animation: marquee 5s linear infinite;
+            }
+            .inner:first-child span{
+                animation-delay: 2.5s;
+                left: -100%;
+            }
+            @keyframes marquee{
+                from{
+                    left: 100%;
+                }
+                
+                to{
+                    left: -100%;
+                }
+            }
+    </style>
+</head>
+<body>
+    <div class="loader">
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+    </div>
+
+    <div class="header">
+        <div class="logo">
+            <div class="dna">
+                <div class="ele" style="--i: 0"></div>
+                <div class="ele" style="--i: 1"></div>
+                <div class="ele" style="--i: 2"></div>
+                <div class="ele" style="--i: 3"></div>
+                <div class="ele" style="--i: 4"></div>
+                <div class="ele" style="--i: 5"></div>
+                <div class="ele" style="--i: 6"></div>
+                <div class="ele" style="--i: 7"></div>
+                <div class="ele" style="--i: 8"></div>
+                <div class="ele" style="--i: 9"></div>
+                <div class="ele" style="--i: 10"></div>
+                <div class="ele" style="--i: 11"></div>
+                <div class="ele" style="--i: 12"></div>
+               
+            </div>
+        </div>
+
+        <div class="nav">
+            <ul>
+                <li><a href="../content/home.html">home</a></li>
+                <li><a href="../content/purpose.html">purpose</a></li>
+                <li><a href="../content/social.html">social media</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="#" id="contactLink">Contact us</a></li>
+            </ul>
+        </div>
+        
+
+        <div class="mobile-menu">
+            <!-- Inline SVG for Hamburger Icon -->
+            <svg id="mobileMenuIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="30px" height="30px" fill="#000000" style="cursor: pointer;">
+                <path d="M0 0h24v24H0z" fill="none"/>
+                <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+            </svg>
+        </div>
+    </div>
+
+    <!-- Mobile Submenu with fade-in animation -->
+    <div class="mobile-submenu" id="mobileSubmenu">
+        <a href="#" id="logisticsLink" class="fade-in" style="padding: 1px;"></a>
+        <a href="../content/home.html" class="fade-in">home</a>
+        <a href="../content/purpose.html" class="fade-in">purpose</a>
+        <a href="../content/social.html" class="fade-in">social media</a>
+        <a href="gallery.html" class="fade-in">Gallery</a>
+        <a href="#" id="contactLinkMobile">Contact us</a>
+    </div>
+
+    <div class="content">
+         <h1 class="fade-in" style="color: #726666; font-family: monospace; font-size: 40px;">🌟 Big Announcement! 🌟</h1>
+        <h3 class="fade-in" style="font-family: serif; font-size: 25px; padding-top: 30px;">I’m super excited to share that my personal website is officially live! 🎉
+
+            It’s been a fun journey putting this together, and now you can explore everything in one place—from my latest projects and work to a little bit about my story. Whether you're interested in [mention something specific like "my design portfolio," "my blog," or "new ideas I’m working on"], it’s all there!
+             🌐
+            I’d love to hear what you think! 😊
+            
+            Thanks for your amazing support—it means the world! 💻💙</h3>
+            <img src="../icon/fayez.jpg" style="border: 4px yellow; border-radius: 10px;" height="300px" width="300px">
+          <h1 class="fade-in" style="color: #726666; font-family: monospace; font-size: 40px;">🎉 It’s here! 🎉</h1>
+          <h3  class="fade-in" style="font-family: serif; font-size: 25px; padding-top: 10px;">I'm excited to finally share my brand-new personal website with all of you! 😊
+
+            It's a place where you can find out more about what I’ve been up to—my projects, passions, and maybe even a few surprises along the way. 💡 I’d love for you to take a look and let me know what you think! 🌟
+            
+            Check it out: [www.fayez.com]
+            Can’t wait to hear your thoughts! 🙌</h3>
+
+        <h1 class="fade-in" style="font-family: monospace; font-size: 40px; padding-top: 30px; color: #726666;">🌟 Dream Come True! 🌟</h1>
+        <h3 class="fade-in" style="font-family: serif; font-size: 25px; padding-top: 10px;">I’m so excited to share a personal milestone with you all—my new website is live! 🙌 This has been a dream of mine for a while, and I’m incredibly grateful for all the support along the way.
+
+            You’ll find [mention something you’re proud of, like "my portfolio," "a blog," or "new projects"]. Please take a look, and let me know what you think—your feedback would mean the world to me.</h3>
+       
+        <div class="box">
+            <div class="inner">
+                <span>RaYees FaYez</span>
+            </div>
+            <div class="inner">
+                <span>RaYees FaYez</span>
+            </div>
+        </div>
+        
+    </div>
+
+      <!-- Contact Section -->
+  <div id="contactSection">
+    <h2 style="color: deepskyblue;">Contact Us</h2>
+    
+    <div>
+        <p><strong>Name: </strong> Ahmad Fayez Saadat</p>
+        <p><strong>Email: </strong> fayezsdt@gmail.com</p>
+        <p><strong>Phone:</strong> +93780729202, +93708071256</p>
+        <p><strong>Address:</strong> Khuja Bughra, Khair_Khana, kabul, Afghanistan</p>
+    </div>
+</div>
+
+    <div class="footer">
+        <img src="../icon/5.png">
+        <p style="color: black;">&copy; All work fayez saadat unless otherwise noted.</p>
+        <div class="icon">
+            <li><a href="https://www.facebook.com/fayez.saadat"><img src="../icon/1.png"></a></li>
+            <li><a href="https://www.instagram.com/fayez.saadat?igsh=YzliYTk1ODg3Zg=="><img src="../icon/2.png"></a></li>
+            <li><a href="https://x.com/Fayezsdt?t=bbn1iacNhlhtsBvXNgHUmw&s=07"><img src="../icon/3.png"></a></li>
+        </div>
+       
+    </div>
+
+    <script>
+        // Mobile Menu functionality
+        const mobileMenuIcon = document.getElementById('mobileMenuIcon');
+        const mobileSubmenu = document.getElementById('mobileSubmenu');
+        const logisticsLink = document.getElementById('logisticsLink');
+        const logisticsSubmenu = document.getElementById('logisticsSubmenu');
+
+        // Toggle mobile main menu
+        mobileMenuIcon.addEventListener('click', () => {
+            if (mobileSubmenu.classList.contains('show')) {
+                mobileSubmenu.classList.remove('show');
+                mobileSubmenu.classList.add('hide');
+            } else {
+                mobileSubmenu.classList.remove('hide');
+                mobileSubmenu.classList.add('show');
+            }
+        });
+
+        // Toggle logistics submenu
+        logisticsLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (logisticsSubmenu.classList.contains('show')) {
+                logisticsSubmenu.classList.remove('show');
+                logisticsSubmenu.classList.add('hide');
+            } else {
+                logisticsSubmenu.classList.remove('hide');
+                logisticsSubmenu.classList.add('show');
+            }
+        });
+
+        // Scroll animation functionality
+        function isInViewport(element) {
+            const rect = element.getBoundingClientRect();
+            return (
+                rect.top >= 0 &&
+                rect.left >= 0 &&
+                rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+                rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+            );
+        }
+
+        function handleScrollAnimation() {
+            const fadeInElements = document.querySelectorAll('.fade-in');
+            
+            fadeInElements.forEach(element => {
+                if (isInViewport(element)) {
+                    element.classList.add('visible');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', handleScrollAnimation);
+        handleScrollAnimation(); // Ensure that any elements already in view are shown
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+        const contactLink = document.querySelector('#contactLink');
+        const contactLinkMobile = document.querySelector('#contactLinkMobile');
+        const contactSection = document.getElementById('contactSection');
+        const menuToggle = document.querySelector('.menu-toggle');
+        const mobileMenu = document.querySelector('.mobile-menu');
+
+        // Toggle the contact section visibility
+        function toggleContactSection() {
+            if (contactSection.style.display === 'none' || contactSection.style.display === '') {
+                contactSection.style.display = 'block';
+                window.scrollTo({
+                    top: contactSection.offsetTop,
+                    behavior: 'smooth'
+                });
+            } else {
+                contactSection.style.display = 'none';
+            }
+        }
+
+        contactLink.addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent default link behavior
+            toggleContactSection();
+        });
+
+        contactLinkMobile.addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent default link behavior
+            toggleContactSection();
+        });
+
+        // Toggle mobile menu visibility
+        menuToggle.addEventListener('click', function() {
+            mobileMenu.style.display = mobileMenu.style.display === 'block' ? 'none' : 'block';
+        });
+    }); 
+    </script>
+    
+</body>
+</html>
